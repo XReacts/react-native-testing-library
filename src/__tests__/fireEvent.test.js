@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { render, fireEvent } from '..';
 
+//待测试支持点击组件
 const OnPressComponent = ({ onPress }) => (
   <View>
     <TouchableOpacity onPress={onPress} testID="button">
@@ -17,12 +18,14 @@ const OnPressComponent = ({ onPress }) => (
   </View>
 );
 
+//待测试不支持点击组件
 const WithoutEventComponent = () => (
   <View>
     <Text testID="text">Content</Text>
   </View>
 );
 
+//待测试自定义事件组件
 const CustomEventComponent = ({ onCustomEvent }) => (
   <TouchableOpacity onPress={onCustomEvent}>
     <Text>Click me</Text>
@@ -39,11 +42,16 @@ const CustomEventComponentWithCustomName = ({ handlePress }) => (
 
 describe('fireEvent', () => {
   test('should invoke specified event', () => {
+    //jest生成一个Mock方法，该Mock方法可以追踪调用
     const onPressMock = jest.fn();
+    //使用Mock的onPress方法，渲染支持点击的组件
     const { getByTestId } = render(<OnPressComponent onPress={onPressMock} />);
 
+    //fireEvent触发id为button按钮的press事件
+    //参考：fireEvent，https://callstack.github.io/react-native-testing-library/docs/api
     fireEvent(getByTestId('button'), 'press');
 
+    //验证传入组件的onPress方法，是否被调用了
     expect(onPressMock).toHaveBeenCalled();
   });
 
@@ -51,14 +59,15 @@ describe('fireEvent', () => {
     const onPressMock = jest.fn();
     const { getByTestId } = render(<OnPressComponent onPress={onPressMock} />);
 
+    //调用的是text-button Text，就不会调用到传入的onPressMock方法
     fireEvent(getByTestId('text-button'), 'press');
-
     expect(onPressMock).toHaveBeenCalled();
   });
 
   test('should throw an Error when event handler was not found', () => {
     const { getByTestId } = render(<WithoutEventComponent />);
 
+    //触发press，没有事件抛出异常
     expect(() => fireEvent(getByTestId('text'), 'press')).toThrow(
       'No handler function found for event: "press"'
     );
@@ -74,6 +83,7 @@ describe('fireEvent', () => {
       </View>
     );
 
+    //FIXME 这个方法定义了参数么？？？
     fireEvent(getByTestId('custom'), 'customEvent', EVENT_DATA);
 
     expect(handlerMock).toHaveBeenCalledWith(EVENT_DATA);
@@ -87,7 +97,9 @@ describe('fireEvent', () => {
       </TouchableOpacity>
     );
 
+    //内层Text没有点击事件
     expect(() => fireEvent.press(getByTestId('test'))).toThrow();
+    //Mock方法没有被调用
     expect(onPressMock).not.toHaveBeenCalled();
   });
 });
@@ -96,12 +108,16 @@ test('fireEvent.press', () => {
   const onPressMock = jest.fn();
   const { getByTestId } = render(<OnPressComponent onPress={onPressMock} />);
 
+  //fireEvent.press：调用实践处理在改元素或者父元素
+  //参考：fireEvent.press，https://callstack.github.io/react-native-testing-library/docs/api
   fireEvent.press(getByTestId('text-button'));
 
+  //所以父元素事件触发，Mock方法被调用了
   expect(onPressMock).toHaveBeenCalled();
 });
 
 test('fireEvent.scroll', () => {
+  //Mock滑动事件，和滑动参数
   const onScrollMock = jest.fn();
   const eventData = {
     nativeEvent: {
@@ -111,14 +127,17 @@ test('fireEvent.scroll', () => {
     },
   };
 
+  //渲染滑动组件
   const { getByTestId } = render(
     <ScrollView testID="scroll-view" onScroll={onScrollMock}>
       <Text>XD</Text>
     </ScrollView>
   );
 
+  //使用参数调用ScrollView的滑动事件
   fireEvent.scroll(getByTestId('scroll-view'), eventData);
 
+  //验证滑动事件是否调用
   expect(onScrollMock).toHaveBeenCalledWith(eventData);
 });
 
@@ -144,6 +163,7 @@ test('custom component with custom event name', () => {
     <CustomEventComponentWithCustomName handlePress={handlePress} />
   );
 
+  //触发自定义名称事件handlePress
   fireEvent(getByTestId('my-custom-button'), 'handlePress');
 
   expect(handlePress).toHaveBeenCalled();
@@ -156,6 +176,7 @@ test('event with multiple handler parameters', () => {
     <CustomEventComponentWithCustomName handlePress={handlePress} />
   );
 
+  //触发自定义事件handlePress多次
   fireEvent(getByTestId('my-custom-button'), 'handlePress', 'param1', 'param2');
 
   expect(handlePress).toHaveBeenCalledWith('param1', 'param2');
