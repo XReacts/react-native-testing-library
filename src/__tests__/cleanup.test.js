@@ -20,8 +20,10 @@ test('cleanup', () => {
 
   render(<Test onUnmount={fn} />);
   render(<Test onUnmount={fn} />);
+  //渲染完毕，当然没有调用Unmount
   expect(fn).not.toHaveBeenCalled();
-
+  //clean()Unmount使用render渲染的React tree
   cleanup();
+  //验证调用2次onUnmount
   expect(fn).toHaveBeenCalledTimes(2);
 });
