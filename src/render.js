@@ -18,8 +18,7 @@ type TestRendererOptions = {
 };
 
 /**
- * Renders test component deeply using react-test-renderer and exposes helpers
- * to assert on the output.
+ * 使用react-test-render深度渲染测试组件，并提供断言输出的帮助API
  */
 export default function render<T>(
   component: React.Element<T>,
@@ -37,6 +36,7 @@ export default function render<T>(
 
   addToCleanupQueue(renderer.unmount);
 
+  //在React Render基础上，封装"上层"对象返回
   return {
     ...getByAPI(instance),
     ...queryByAPI(instance),
@@ -56,6 +56,7 @@ function renderWithAct(
   let renderer: ReactTestRenderer;
 
   act(() => {
+    //使用React-Rest-Render创建render对象，实际底层还是React Render
     renderer = TestRenderer.create(component, options);
   });
 

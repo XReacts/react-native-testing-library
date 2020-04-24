@@ -17,6 +17,9 @@ const PLACEHOLDER_CHEF = 'Who inspected freshness?';
 const INPUT_FRESHNESS = 'Custom Freshie';
 const INPUT_CHEF = 'I inspected freshie';
 
+/**
+ * 待测试的Button组件
+ */
 class Button extends React.Component<any> {
   render() {
     return (
@@ -27,6 +30,9 @@ class Button extends React.Component<any> {
   }
 }
 
+/**
+ * 待测试的Banana组件
+ */
 class Banana extends React.Component<any, any> {
   state = {
     fresh: false,
@@ -80,21 +86,29 @@ class Banana extends React.Component<any, any> {
 }
 
 test('getByTestId, queryByTestId', () => {
+  //深度渲染后，通过getByTestId获取待测试组件
   const { getByTestId, queryByTestId } = render(<Banana />);
   const component = getByTestId('bananaFresh');
 
+  //验证组件childeren渲染not fresh
   expect(component.props.children).toBe('not fresh');
+  //验证不存在testID为InExistent的Node
+  //getByTestId()没有node抛出Error
   expect(() => getByTestId('InExistent')).toThrow('No instances found');
 
   expect(getByTestId('bananaFresh')).toBe(component);
+  //queryByTestId()没有node返回null
   expect(queryByTestId('InExistent')).toBeNull();
 });
 
 test('getAllByTestId, queryAllByTestId', () => {
   const { getAllByTestId, queryAllByTestId } = render(<Banana />);
+  //getAllByTestId()返回所有匹配的node
   const textElements = getAllByTestId('duplicateText');
 
+  //验证查找到2个元素
   expect(textElements.length).toBe(2);
+  //验证第一个和第二个的文案
   expect(textElements[0].props.children).toBe('First Text');
   expect(textElements[1].props.children).toBe('Second Text');
   expect(() => getAllByTestId('nonExistentTestId')).toThrow(
@@ -106,26 +120,31 @@ test('getAllByTestId, queryAllByTestId', () => {
   expect(queriedTextElements.length).toBe(2);
   expect(queriedTextElements[0]).toBe(textElements[0]);
   expect(queriedTextElements[1]).toBe(textElements[1]);
+  //queryAllByTestId()没有node返回空数组
   expect(queryAllByTestId('nonExistentTestId')).toHaveLength(0);
 });
 
 test('getByName, queryByName', () => {
   const { getByTestId, getByName, queryByName } = render(<Banana />);
   const bananaFresh = getByTestId('bananaFresh');
+  //根据React Component类型查找Node，不建议使用，在次要RN版本不稳定，将会移除
   const button = getByName('Button');
-
+  //"模拟"点击按钮，FIXME 事件是如何模拟的？？？
   button.props.onPress();
-
+  //校验bananaFresh更换state之后，展示fresh文案
   expect(bananaFresh.props.children).toBe('fresh');
 
+  //通过getByName使用Button类型，不是字符串查找
   const sameButton = getByName(Button);
   sameButton.props.onPress();
 
   expect(bananaFresh.props.children).toBe('not fresh');
   expect(() => getByName('InExistent')).toThrow('No instances found');
+  //抛出异常验证页面Node的个数
   expect(() => getByName(Text)).toThrow('Expected 1 but found 6');
 
   expect(queryByName('Button')).toBe(button);
+  //query没有返回null
   expect(queryByName('InExistent')).toBeNull();
 });
 
@@ -135,9 +154,11 @@ test('getAllByName, queryAllByName', () => {
 
   expect(text.props.children).toBe('Is the banana fresh?');
   expect(status.props.children).toBe('not fresh');
+  //FIXME Button也是Text？？
   expect(button.props.children).toBe('Change freshness!');
   expect(() => getAllByName('InExistent')).toThrow('No instances found');
 
+  //[1]访问返回node数组的元素
   expect(queryAllByName('Text')[1]).toBe(status);
   expect(queryAllByName('InExistent')).toHaveLength(0);
 });
@@ -145,6 +166,7 @@ test('getAllByName, queryAllByName', () => {
 test('getAllByType, queryAllByType', () => {
   const { getAllByType, queryAllByType } = render(<Banana />);
   const [text, status, button] = getAllByType(Text);
+  //FIXME InExistent是方法()=>null类型？？
   const InExistent = () => null;
 
   expect(text.props.children).toBe('Is the banana fresh?');
@@ -158,6 +180,7 @@ test('getAllByType, queryAllByType', () => {
 
 test('getByText, queryByText', () => {
   const { getByText, queryByText } = render(<Banana />);
+  ///change/i是正则表达式
   const button = getByText(/change/i);
 
   expect(button.props.children).toBe('Change freshness!');
@@ -176,10 +199,11 @@ test('getByText, queryByText', () => {
 });
 
 test('getByText, queryByText with children as Array', () => {
+  //函数式组件BananaCounter
   const BananaCounter = ({ numBananas }) => (
     <Text>There are {numBananas} bananas in the bunch</Text>
   );
-
+  //函数式组件BananaStore
   const BananaStore = () => (
     <View>
       <BananaCounter numBananas={3} />
@@ -191,6 +215,7 @@ test('getByText, queryByText with children as Array', () => {
   const { getByText } = render(<BananaStore />);
 
   const threeBananaBunch = getByText('There are 3 bananas in the bunch');
+  //模板字符串需要这样匹配？
   expect(threeBananaBunch.props.children).toEqual([
     'There are ',
     3,
@@ -210,9 +235,11 @@ test('getAllByText, queryAllByText', () => {
 });
 
 test('getByPlaceholder, queryByPlaceholder', () => {
+  //通过placeHolder查找TextInput组件
   const { getByPlaceholder, queryByPlaceholder } = render(<Banana />);
   const input = getByPlaceholder(/custom/i);
 
+  //验证placeholder属性
   expect(input.props.placeholder).toBe(PLACEHOLDER_FRESHNESS);
 
   const sameInput = getByPlaceholder(PLACEHOLDER_FRESHNESS);
@@ -241,6 +268,7 @@ test('getAllByPlaceholder, queryAllByPlaceholder', () => {
 });
 
 test('getByDisplayValue, queryByDisplayValue', () => {
+  //通过displayValue查找TextInput组件
   const { getByDisplayValue, queryByDisplayValue } = render(<Banana />);
   const input = getByDisplayValue(/custom/i);
 
@@ -268,6 +296,7 @@ test('getAllByDisplayValue, queryAllByDisplayValue', () => {
 });
 
 test('getByProps, queryByProps', () => {
+  //通过Node的props属性查找
   const { getByProps, queryByProps } = render(<Banana />);
   const primaryType = getByProps({ type: 'primary' });
 
@@ -300,9 +329,12 @@ test('update', () => {
 
   button.props.onPress();
 
+  //update()使用新的节点在内存中重新渲染tree
   update(<Banana onUpdate={fn} />);
   rerender(<Banana onUpdate={fn} />);
 
+  //toHaveBeenCalledTimes，fun方法调用了3次
+  //类似于Native的Mockito验证代码调用逻辑
   expect(fn).toHaveBeenCalledTimes(3);
 });
 
@@ -310,25 +342,31 @@ test('unmount', () => {
   const fn = jest.fn();
   const { unmount } = render(<Banana onUnmount={fn} />);
   unmount();
+  //toHaveBeenCalled被调用过
   expect(fn).toHaveBeenCalled();
 });
 
 test('toJSON', () => {
   const { toJSON } = render(<Button>press me</Button>);
-
+  //渲染组件Json表达形式，镜像测试
+  //是不是也替代了JEST的镜像测试，Enzyme浅层测试也被替代了
   expect(toJSON()).toMatchSnapshot();
 });
 
 test('debug', () => {
+  //Jest mock方法的实现，这和Mockito不是一样吗？？
   jest.spyOn(console, 'log').mockImplementation(x => x);
 
+  //debug
   const { debug } = render(<Banana />);
-
+  //深度渲染组件输出log
   debug();
   debug('my custom message');
+  //浅层渲染组件输出log
   debug.shallow();
   debug.shallow('my other custom message');
 
+  //FIXME 这个地方是在验证组件深处渲染后log的输出吗？jest.spyOn()方法Mock是为了拿到输出日志？？
   // eslint-disable-next-line no-console
   const mockCalls = ((console.log: any): ConsoleLogMock).mock.calls;
 
@@ -343,14 +381,16 @@ test('debug', () => {
 });
 
 test('debug changing component', () => {
+  //Mock console对象的log方法实现，
   jest.spyOn(console, 'log').mockImplementation(x => x);
 
+  //渲染Banana组件后，点击type为primary的按钮，实际改变this.state.fresh
   const { getByProps, debug } = render(<Banana />);
-
   fireEvent.press(getByProps({ type: 'primary' }));
-
+  //打印深度渲染的组件
   debug();
 
+  //FIXME 这个地方是在验证组件深处渲染后log的输出吗？jest.spyOn()方法Mock是为了拿到输出日志？？
   // eslint-disable-next-line no-console
   const mockCalls = ((console.log: any): ConsoleLogMock).mock.calls;
 
@@ -382,17 +422,20 @@ test('renders options.wrapper around node', () => {
 });
 
 test('renders options.wrapper around updated node', () => {
+  //一个React Component将渲染的组件作为childern包裹
   const WrapperComponent = ({ children }) => (
     <SafeAreaView testID="wrapper">{children}</SafeAreaView>
   );
 
+  //使用wrapper包括渲染的component <View>
   const { toJSON, getByTestId, rerender } = render(<View testID="inner" />, {
     wrapper: WrapperComponent,
   });
-
+  //rerender模拟React更新root，增加accessibilityLabel属性
   rerender(<View testID="inner" accessibilityLabel="test" />);
 
   expect(getByTestId('wrapper')).toBeTruthy();
+  //镜像校验，更新后accessibilityLabel属性是否在正确Node位置
   expect(toJSON()).toMatchInlineSnapshot(`
     <RCTSafeAreaView
       emulateUnlessSupported={true}
