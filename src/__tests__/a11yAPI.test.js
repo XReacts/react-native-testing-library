@@ -18,6 +18,7 @@ const Typography = ({ children, ...rest }: any) => {
   return <Text {...rest}>{children}</Text>;
 };
 
+//FIXME accessibility***h这些属性在实际应用中很少使用吧？？？
 class Button extends React.Component<any> {
   render() {
     return (
@@ -62,15 +63,19 @@ function Section() {
 
 test('getByA11yLabel, queryByA11yLabel', () => {
   const { getByA11yLabel, queryByA11yLabel } = render(<Section />);
-
+  //通具体文本查找
   expect(getByA11yLabel(BUTTON_LABEL).props.accessibilityLabel).toEqual(
     BUTTON_LABEL
   );
+
+  //通过正则表达式查找
   const button = queryByA11yLabel(/button/g);
   expect(button && button.props.accessibilityLabel).toEqual(BUTTON_LABEL);
+  //get**没有匹配的抛出异常
   expect(() => getByA11yLabel(NO_MATCHES_TEXT)).toThrow(NO_INSTANCES_FOUND);
+  //query没有匹配的返回null
   expect(queryByA11yLabel(NO_MATCHES_TEXT)).toBeNull();
-
+  //查找多个抛出多个的异常
   expect(() => getByA11yLabel(TEXT_LABEL)).toThrow(FOUND_TWO_INSTANCES);
   expect(() => queryByA11yLabel(TEXT_LABEL)).toThrow(FOUND_TWO_INSTANCES);
 });
@@ -78,8 +83,11 @@ test('getByA11yLabel, queryByA11yLabel', () => {
 test('getAllByA11yLabel, queryAllByA11yLabel', () => {
   const { getAllByA11yLabel, queryAllByA11yLabel } = render(<Section />);
 
+  //验证具体的查找的个数toHaveLength
   expect(getAllByA11yLabel(TEXT_LABEL)).toHaveLength(2);
   expect(queryAllByA11yLabel(/cool/g)).toHaveLength(3);
+
+  //getAll多个没有抛出多个的异常，queryAll多个返回空数组
   expect(() => getAllByA11yLabel(NO_MATCHES_TEXT)).toThrow(NO_INSTANCES_FOUND);
   expect(queryAllByA11yLabel(NO_MATCHES_TEXT)).toEqual([]);
 });
@@ -227,6 +235,7 @@ test('getByA11yValue, queryByA11yValue', () => {
 test('getAllByA11yValue, queryAllByA11yValue', () => {
   const { getAllByA11yValue, queryAllByA11yValue } = render(<Section />);
 
+  //通过props对象里面的key-value进行查找
   expect(getAllByA11yValue({ min: 40 }).length).toEqual(1);
   expect(queryAllByA11yValue({ min: 40 }).length).toEqual(1);
 

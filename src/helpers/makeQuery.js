@@ -29,6 +29,7 @@ const makeQuery = <P: mixed, M: mixed>(
 ) => (instance: ReactTestInstance) => {
   const getBy = (matcher: M) => {
     try {
+      //本质上，还是调用React Test的find方法进行查找
       return instance.find(
         node => isNodeValid(node) && matcherFn(node.props[name], matcher)
       );
