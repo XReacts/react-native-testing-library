@@ -14,12 +14,14 @@ const TextPress = ({ dummyID }: Props) => (
 );
 
 test('shallow rendering React elements', () => {
+  //镜像root层Node节点
   const { output } = shallow(<TextPress dummyID="2" />);
 
   expect(output).toMatchSnapshot();
 });
 
 test('shallow rendering React Test Instance', () => {
+  //镜像child层Node节点
   const { getByTestId } = render(<TextPress />);
   const { output } = shallow(getByTestId('text-button'));
 
