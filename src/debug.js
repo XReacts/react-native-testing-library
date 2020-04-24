@@ -7,7 +7,7 @@ import debugDeep from './helpers/debugDeep';
 import format from './helpers/format';
 
 /**
- * Log pretty-printed deep test component instance
+ * 日志输出组件实例的深度渲染
  */
 function debugDeepElementOrInstance(
   instance: React.Element<any> | ?ReactTestRendererJSON,
@@ -17,7 +17,9 @@ function debugDeepElementOrInstance(
     // We're assuming React.Element<any> here and fallback to
     // rendering ?ReactTestRendererJSON
     // $FlowFixMe
+    //还是调用render()方法深度渲染吧！！！
     const { toJSON } = render(instance);
+    //最终通过console.log打出日志
     if (message) {
       console.log(`${message}\n\n`, format(toJSON()));
     } else {

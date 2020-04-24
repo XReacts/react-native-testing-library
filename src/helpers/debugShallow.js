@@ -12,6 +12,7 @@ export default function debugShallow(
 ) {
   const { output } = shallowInternal(instance);
 
+  //通过日志输出浅层渲染
   if (message) {
     console.log(`${message}\n\n`, format(output));
   } else {

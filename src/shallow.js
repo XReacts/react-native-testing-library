@@ -9,6 +9,7 @@ import { printDeprecationWarning } from './helpers/errors';
 export function shallowInternal(
   instance: ReactTestInstance | React.Element<any>
 ) {
+  //调用react-test-render的浅层渲染
   const renderer = new ShallowRenderer();
 
   renderer.render(React.createElement(instance.type, instance.props));
