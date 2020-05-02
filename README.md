@@ -7,30 +7,29 @@
   />
   <h1>React Native Testing Library</h1>
 
-  <p>Lightweight React Native testing utilities helping you write better tests with less effort.</P>
+  <p>轻量级React Native测试工具，帮助你以更少的精力编写更好的测试。.</P>
 </div>
 
 [![Version][version-badge]][package]
 [![PRs Welcome][prs-welcome-badge]][prs-welcome]
 [![Chat][chat-badge]][chat]
-[![Greenkeeper badge][greenkeeper-badge]][greenkeeper]
 [![Sponsored by Callstack][callstack-badge]][callstack]
 
-_Appreciation notice: This project is heavily inspired by [react-testing-library](https://github.com/kentcdodds/react-testing-library). Go check it out and use it to test your web React apps._
+_致谢通知：该项目的灵感来源于[react-testing-library](https://github.com/kentcdodds/react-testing-library)。去Check it Out并使用它测试你的Web React 应用。_
 
-## The problem
+## 问题
 
-You want to write maintainable tests for your React Native components without testing implementation details, but then you're told to use Enzyme, which you learn has no React Native adapter, meaning only shallow rendering is supported. And you want to render deep! But deep rendering may otherwise require jsdom (React Native isn't the web!), while doing deep rendering with `react-test-renderer` is so painful.
+你想为你的React Native组件编写可维护的测试，而无需测试实现细节，但是却被告知使用Enzyme，你所学的没有React Native适配器，这意味着仅仅支持浅层测试。而你想深度渲染！但是深度渲染可能需要jsdom(React Native不是web!)，而用`react-test-renderer`进行深层测试是如何痛苦。
 
-You would also like to use the newest React features, but you need to wait for your testing library's abstractions to catch up and it takes a while.
+你还想使用最新的React功能，但是您需要等待测试库的抽象赶上类，这需要一段时间。
 
-You finally want to approach testing using only best practices, while Enzyme may encourage assertions on implementation details.
+你最终只想使用最佳实践来进行测试，然而Enzyme可能会实现细节进行断言。
 
-## This solution
+## 解决方案
 
-The `react-native-testing-library` is a lightweight solution for testing your React Native components. It provides light utility functions on top of `react-test-renderer` letting you always be up to date with latest React features and write any component tests you like. But really not any, it prevents you from testing implementation details because we stand this is a very bad practice.
+`react-native-testing-library`是用于测试你的React Native组件的轻量级解决方案。它在`react-test-renderer`基础之上提供轻量级的实用程序功能，使你可以始终了解最新的React功能，并编写所需的任何组件测试。但是实际上没有，它阻止你实现细节，因为我们认为这是非常糟糕的做法。
 
-This library is a replacement for [Enzyme](http://airbnb.io/enzyme/). It is tested to work with Jest, but it should work with other test runners as well.
+该库替代了[Enzyme](http://airbnb.io/enzyme/). 他可以和Jest一起用于测试，但是也应与其它测试runner一起使用。
 
 ## Example
 
@@ -59,34 +58,34 @@ test('should verify two questions', () => {
 });
 ```
 
-## Installation
+## 安装
 
-Open a Terminal in your project's folder and run:
+在你项目的目录打开Terminal和运行：
 
 ```sh
 yarn add --dev react-native-testing-library
 ```
 
-This library has a peerDependencies listing for `react-test-renderer` and, of course, `react`. Make sure to install them too!
+这个库有一个peerDependencies列举了`react-test-renderer`等，当然还有`react`。确保也安装他们！
 
-Note for [Flow](https://flow.org) users – you'll also need to install typings for `react-test-renderer`:
+[Flow]用户注意事项(https://flow.org)  – 你也将需要为`react-test-renderer`安装类型：
 
 ```sh
 flow-typed install react-test-renderer
 ```
 
-As you may have noticed, it's not tied to React Native at all – you can safely use it in your React components if you feel like not interacting directly with DOM.
+你可能已注意到，它根本不与React Native绑定 – 如果您不想直接与DOM交互，可以在自己的React组件中安全地使用它。
 
-## API / Usage
+## API / 用法
 
-The [public API](https://callstack.github.io/react-native-testing-library/docs/api) of `react-native-testing-library` is focused around these essential methods:
+`react-native-testing-library`的[public API]https://callstack.github.io/react-native-testing-library/docs/api)重点介绍一下基本方法：
 
-- [`render`](https://callstack.github.io/react-native-testing-library/docs/api#render) – deeply renders given React element and returns helpers to query the output components.
-- [`fireEvent`](https://callstack.github.io/react-native-testing-library/docs/api#fireevent) - invokes named event handler on the element.
-- [`waitForElement`](https://callstack.github.io/react-native-testing-library/docs/api#waitforelement) - waits for non-deterministic periods of time until your element appears or times out.
-- [`flushMicrotasksQueue`](https://callstack.github.io/react-native-testing-library/docs/api#flushmicrotasksqueue) - waits for microtasks queue to flush.
+- [`render`](https://callstack.github.io/react-native-testing-library/docs/api#render) – 深度渲染给定的React元素，并返回帮助器以查询输出组件。
+- [`fireEvent`](https://callstack.github.io/react-native-testing-library/docs/api#fireevent) - 调用元素上命名事件处理程序。
+- [`waitForElement`](https://callstack.github.io/react-native-testing-library/docs/api#waitforelement) - 等待不确定的时间，知道你的元素出现或显示出现或超时。
+- [`flushMicrotasksQueue`](https://callstack.github.io/react-native-testing-library/docs/api#flushmicrotasksqueue) - 等待micro任务队列刷新。
 
-**Note to users who are more familiar with `react-testing-library`:** This API does not expose `cleanup` because it doesn't interact with the DOM. There's nothing to clean up.
+**更熟悉`react-testing-library`的用户注意:** 该API不会公开cleanup，因为它不与DOM交互。没有什么需要清理的。
 
 ## Made with ❤️ at Callstack
 
@@ -104,7 +103,5 @@ Supported and used by [Rally Health](https://www.rallyhealth.com/careers-home).
 [prs-welcome]: http://makeapullrequest.com
 [chat-badge]: https://img.shields.io/discord/426714625279524876.svg?style=flat-square&colorB=758ED3
 [chat]: https://discord.gg/QbGezWe
-[greenkeeper-badge]: https://badges.greenkeeper.io/callstack/react-native-testing-library.svg?style=flat-square
-[greenkeeper]: https://greenkeeper.io/
 [callstack-badge]: https://callstack.com/images/callstack-badge.svg
 [callstack]: https://callstack.com/open-source/?utm_source=github.com&utm_medium=referral&utm_campaign=react-native-testing-library&utm_term=readme
