@@ -59,7 +59,7 @@ describe('fireEvent', () => {
     const onPressMock = jest.fn();
     const { getByTestId } = render(<OnPressComponent onPress={onPressMock} />);
 
-    //调用的是text-button Text，就不会调用到传入的onPressMock方法
+    //调用的是text-button Text，调用父控件的press方法
     fireEvent(getByTestId('text-button'), 'press');
     expect(onPressMock).toHaveBeenCalled();
   });

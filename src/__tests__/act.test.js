@@ -7,11 +7,13 @@ import render from '../render';
 import fireEvent from '../fireEvent';
 
 const UseEffect = ({ callback }: { callback: Function }) => {
+  //Hook useEffect,类似于componentDidMoun和componentDidUpdate
   React.useEffect(callback);
   return null;
 };
 
 const Counter = () => {
+  //Hook useState,在不编写class的情况下使用state
   const [count, setCount] = React.useState(0);
 
   return (
@@ -23,6 +25,7 @@ const Counter = () => {
 
 test('render should trigger useEffect', () => {
   const effectCallback = jest.fn();
+  //render：render方法会触发useEffect
   render(<UseEffect callback={effectCallback} />);
 
   expect(effectCallback).toHaveBeenCalledTimes(1);
@@ -31,6 +34,7 @@ test('render should trigger useEffect', () => {
 test('update should trigger useEffect', () => {
   const effectCallback = jest.fn();
   const { update } = render(<UseEffect callback={effectCallback} />);
+  //update：在内存中使用新的root元素重新渲染
   update(<UseEffect callback={effectCallback} />);
 
   expect(effectCallback).toHaveBeenCalledTimes(2);
@@ -39,8 +43,9 @@ test('update should trigger useEffect', () => {
 test('fireEvent should trigger useState', () => {
   const { getByTestId } = render(<Counter />);
   const counter = getByTestId('counter');
-
+  //counter.props.children验证值
   expect(counter.props.children).toEqual(0);
+  //触发press事件
   fireEvent.press(counter);
   expect(counter.props.children).toEqual(1);
 });
