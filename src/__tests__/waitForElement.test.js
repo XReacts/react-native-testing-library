@@ -37,13 +37,13 @@ class BananaContainer extends React.Component<{}, any> {
 
 test('waits for element until it stops throwing', async () => {
   const { getByTestId, getByName, queryByTestId } = render(<BananaContainer />);
-
+  //触发点击事件，倒计时更新fresh
   fireEvent.press(getByName('TouchableOpacity'));
-
+  //立即检查fresh不存在
   expect(queryByTestId('fresh')).toBeNull();
-
+  //手工等待fresh出现
   const freshBananaText = await waitForElement(() => getByTestId('fresh'));
-
+  //expectfreash出现
   expect(freshBananaText.props.children).toBe('Fresh');
 });
 
@@ -53,6 +53,7 @@ test('waits for element until timeout is met', async () => {
   fireEvent.press(getByName('TouchableOpacity'));
 
   await expect(
+    //超时时间等待
     waitForElement(() => getByTestId('fresh'), 100)
   ).rejects.toThrow();
 });
@@ -63,11 +64,12 @@ test('waits for element with custom interval', async () => {
   });
 
   try {
+    //400秒内，每隔200秒执行一次
     await waitForElement(() => mockFn(), 400, 200);
   } catch (e) {
     // suppress
   }
-
+  //校验调用3次
   expect(mockFn).toHaveBeenCalledTimes(3);
 });
 
@@ -79,6 +81,7 @@ test('works with fake timers', async () => {
   });
 
   try {
+    //等待不确定的时间，直到元素出现
     waitForElement(() => mockFn(), 400, 200);
   } catch (e) {
     // suppress
