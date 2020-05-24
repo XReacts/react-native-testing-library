@@ -56,7 +56,7 @@ test('should act even if there is no act in react-test-renderer', () => {
   // $FlowFixMe
   ReactTestRenderer.act = undefined;
   const callback = jest.fn();
-  //执行callback()方法
+  //执行callback()方法，其实fireEvent底层实现就是act
   //参考：https://zh-hans.reactjs.org/docs/test-utils.html#act
   act(() => {
     callback();
