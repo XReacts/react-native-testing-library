@@ -6,6 +6,8 @@ import act from '../act';
 import render from '../render';
 import fireEvent from '../fireEvent';
 
+//Effect Hook，React 16.8出的新特性，可以在不使用class的情况下使用State以及他的React特性
+//参考：https://zh-hans.reactjs.org/docs/hooks-effect.html
 const UseEffect = ({ callback }: { callback: Function }) => {
   //Hook useEffect,类似于componentDidMoun和componentDidUpdate
   React.useEffect(callback);
